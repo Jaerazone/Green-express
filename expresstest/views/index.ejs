@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>API로 값 가져오기</h1>
+    <input type="number" id="num">
+    <button id="btnapi">확인</button>
+    <p id="apitext"> </p>
+
+    <script>
+      //Ajax
+      function openapi() {
+        const req = new XMLHttpRequest();
+
+        req.open('GET', 'https://busan-food.openapi.redtable.global/api/menu/korean?serviceKey=3cOsoxEnSZYVeTrfKrARQcYYonhykJwpZEurgWtYALHVUijbNn2a5tu7p5V7MIcw');
+        req.send();
+        req.onreadystatechange = function () {
+          if(this.readyState==4 && this.status==200) {
+            
+            const apitext = document.querySelector('#apitext'); // P태그에 출력
+            const num = document.querySelector('#num'); // P태그에 출력
+            // string 문자열을 JSON 객체형식으로 바꿈
+            const data = JSON.parse(this.response) //apitext.innerHTML = this.response; // 이렇게 사용하면 문자열로 들어오기때문에 JSON.parse(this.response) 로 들어와보자
+
+            // (실습) 식당이름 출력하기 "RSTR_NM"
+            //apitext.innerHTML = data.body[0].RSTR_NM;
+            //apitext.innerHTML = data.body[0].MENU_NM;
+            //apitext.innerHTML = data.body[0].MENU_PRICE;
+
+            //body안의 0번째 index에 있는 menu_price를 들고와보자
+            apitext.innerHTML = data.body[num.value].RSTR_NM;
+            apitext.innerHTML += data.body[num.value].MENU_NM;
+            apitext.textContent += data.body[num.value].MENU_PRICE;
+            // textContent Node의 속성으로, innerHTML과 달리  <script>나 <style> 태그와 상관없이 해상 노드가 가지고 있는 텍스트 값을 그대로 읽습니다
+            // https://hianna.tistory.com/483
+            console.log(this.response) // 콘솔에 함수 openapi() 실행하니 값나옴 {헤더머시가~}
+          }
+        }
+      }
+
+      const btnapi = document.querySelector('#btnapi');
+      btnapi.addEventListener('click', openapi);
+
+      
+
+    </script>
+  </body>
+</html>
